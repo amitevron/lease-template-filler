@@ -79,7 +79,7 @@ async function modifyPdf(data) {
 				  putText(pages[0], data.endDate, 								257, 461, font, 12) 
 				  putText(pages[0], data.rent, 									222, 447, font, 12)      
 				  putText(pages[0], data.name+",", 								 98, 419, font, 12)
-				  putText(pages[0], data.newRent,										434, 295, font, 12)		//need to impletement new rent
+				  putText(pages[0], data.newRent,								434, 295, font, 12)		//need to impletement new rent
 				  // putText(pages[0], data.leaseDate,								328, 364, font, 12)
 				  putText(pages[0], data.leaseDate,								328, 364, font, 12)
 				  // putText(pages[0], endMonth+"/"+endDay+"/"+(endYear+1),		316, 146, font, 12)
@@ -113,31 +113,35 @@ async function modifyPdf(data) {
 // });
 // }
 
-	chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
- 		return new Promise((resolve, reject) => {
- 			chrome.tabs.sendMessage(tabs[0].id, {greeting: "hello"}, function(response) {
- 		 	document.getElementById('sent').innerHTML = response.data.name
-    		console.log(response.data.name);
-    		// const keys = Object.keys(response.data)
-	    	// // alert(keys)
-	    	// for (const key of keys) {
-	    	// 	console.log("key is " + key + " and value is " + response.data[key])
-	    	// }
-    		$("#lease_information_form_tenant_name").attr("value", response.data.name)
-    		var [endMonth, endDay, endYear] = response.data.endDate.split('/').map(x => parseInt(x))
-    		const formDate = (endYear+1)+"-"+endMonth+"-"+endDay
-    		$("#lease_information_form_end_date").attr("value", formDate)
-    		// document.getElementById('save_button').onclick=modifyPdf(response.data);
-	    		$('#save_button').click(function(){
-	    			response.data.newRent = $('#lease_information_form_new_rent').val().toString()
-	    			response.data.newEndDate = $('#lease_information_form_end_date').val().toString()
-	    			modifyPdf(response.data);
-	    			return false
-	    		})
-		    	resolve()
-		  	});
-		});
-	 });
+chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+	return new Promise((resolve, reject) => {
+		chrome.tabs.sendMessage(tabs[0].id, {greeting: "hello"}, function(response) {
+	 	document.getElementById('sent').innerHTML = response.data.name
+		console.log(response.data.name);
+	// const keys = Object.keys(response.data)
+	// // alert(keys)
+	// for (const key of keys) {
+	// 	console.log("key is " + key + " and value is " + response.data[key])
+	// }
+		$("#lease_information_form_tenant_name").attr("value", response.data.name)
+		
+		//var [endMonth, endDay, endYear] = response.data.endDate.split('/').map(x => parseInt(x))
+		//const formDate = (endYear+1)+"-"+endMonth+"-"+endDay
+		const formDate = new Date(response.data.endDate.split('/').map(x => parseInt(x)))
+		console.log(formDate.getFullYear() + '/' + (formDate.getMonth() > 8) ? (formDate.getMonth() + 1) : ('0' + (formDate.getMonth() + 1)))
+		$("#lease_information_form_current_end_date").attr("value", (formDate.getFullYear() + '-' + ((formDate.getMonth() > 8) ? (formDate.getMonth() + 1) : ('0' + (formDate.getMonth() + 1))) + '-' + ((formDate.getDate() > 9) ? formDate.getDate() : ('0' + formDate.getDate()))))
+		// $("#lease_information_form_new_end_date").attr("value", )
+		// document.getElementById('save_button').onclick=modifyPdf(response.data);
+    		$('#save_button').click(function(){
+    			response.data.newRent = $('#lease_information_form_new_rent').val().toString()
+    			response.data.newEndDate = $('#lease_information_form_new_end_date').val().toString()
+    			modifyPdf(response.data);
+    			return false
+    		})
+	    	resolve()
+	  	});
+	});
+ });
 
 	// chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
  // 		chrome.tabs.sendMessage(tabs[0].id, {greeting: "hello"}, function(response) {
