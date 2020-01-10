@@ -1,0 +1,30 @@
+{
+  "name": "least template filler",
+  "version": "1.0",
+  "description": "fills in leases with data from AppFolio.",
+  "background": {
+    "persistent": false,
+    "scripts": ["/jQuery/jquery.min.js", "pdf-lib.min.js", "background.js"]
+  },
+  "page_action": {
+    "default_icon": {
+      "16": "icon-48.png"
+    },
+    "default_popup": "popup.html"
+},
+  "content_scripts": [
+    {
+      "matches": ["*://orionduna.appfolio.com/occupancies/*"],
+      "run_at": "document_end",
+      "js": ["/jQuery/jquery.min.js", "myscript.js"]
+    }
+  ],
+  "permissions" : [
+    "activeTab", "webNavigation", "downloads", "declarativeContent"
+  ],
+  // "content_security_policy": "script-src * data: https://unpkg.com 'unsafe-inline' 'unsafe-eval'",
+  // "icons" : {
+  //   "48" : "icon-48.png"
+  // },
+  "manifest_version": 2
+}

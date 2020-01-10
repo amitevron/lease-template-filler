@@ -1,0 +1,68 @@
+<html style="height: 450px; width: 600">
+  <head>
+    <meta charset="utf-8" />
+    <script src="/pdf-lib.min.js"></script>
+    <script src="/jQuery/jquery.min.js"></script>
+  	<script type="text/javascript" src="/popup.js"></script>
+  	<link rel="stylesheet" type="text/css" href="main.css">
+  	<link rel="stylesheet" type="text/css" href="bootstrap-saffron.min.css">
+  </head>
+
+  <body style="height: 450px; width: 600">
+  	<p id=sent>just a thing here</p>
+  	<form class="form js-submit-block" id="lease_information_form" accept-charset="UTF-8" data-remote="true" method="post"><input name="utf8" type="hidden" value="✓">
+      <div class="form__row">
+      	<label class="form__row__label" for="lease_information_form_new_rent">New Rent</label>
+      	<div class="form__row__body">
+      		<div class="form__row__field-wrapper">
+      				<input class="tenant_name" type="text" name="lease_information_form[new_rent]" id="lease_information_form_new_rent">    			
+      		</div>
+      	</div>
+      </div>
+
+      <div class="form__row">
+      	<label class="form__row__label" for="lease_information_form_signed_end_date">Lease end date</label>
+      	<div class="form__row__body">
+      		<div class="form__row__field-wrapper">
+      				<input data-provide="datepicker-inline" class="end_date" type="date" name="lease_information_form[new_rent]" id="lease_information_form_end_date">    			
+      		</div>
+      	</div>
+      </div>
+
+
+<!--
+
+
+      <div class="form__row"><div class="form__row__body"><div class="form__row__field-wrapper"><input value="0" type="hidden" name="occupancies_lease_information_form[month_to_month]"><label class="form__row__control form__row__control--inline"><input class="js-month-to-month" type="checkbox" value="1" name="occupancies_lease_information_form[month_to_month]" id="occupancies_lease_information_form_month_to_month"> Month To Month</label></div></div></div>
+      <div class="form__row js-start-on"><label class="form__row__label" for="occupancies_lease_information_form_start_on">Start Date</label>
+      	<div class="form__row__body">
+      		<div class="form__row__field-wrapper">
+      			<div class="js-gears-date input-add-on">
+					<input class="js-datepicker" type="text" name="occupancies_lease_information_form[start_on]" id="occupancies_lease_information_form_start_on">
+      				<span class="js-datepicker-trigger input-add-on__append button">
+      				<span class="icon icon-calendar"></span></span>
+      				</div>
+      			</div>
+      		</div>
+      	</div>
+      <div class="form__row js-end-on" style=""><label class="form__row__label" for="occupancies_lease_information_form_end_on">End Date</label><div class="form__row__body"><div class="form__row__field-wrapper"><div class="js-gears-date input-add-on"><input class="js-datepicker" type="text" value="09/30/2020" name="occupancies_lease_information_form[end_on]" id="occupancies_lease_information_form_end_on"><span class="js-datepicker-trigger input-add-on__append button"><span class="icon icon-calendar"></span></span></div></div></div></div>
+      <div class="form__row"><label class="form__row__label" for="occupancies_lease_information_form_renewed_on">Renewed On</label><div class="form__row__body"><div class="form__row__field-wrapper"><div class="js-gears-date input-add-on"><input class="js-datepicker" type="text" name="occupancies_lease_information_form[renewed_on]" id="occupancies_lease_information_form_renewed_on"><span class="js-datepicker-trigger input-add-on__append button"><span class="icon icon-calendar"></span></span></div></div></div></div>-->
+
+
+              <div class="btn-toolbar mb-3">
+            <input id="save_button" class="btn btn-primary" data-disable-with="Please Wait..." name="commit" type="submit" value="Generate Lease">
+            
+          </div>
+
+
+</form>
+  	<!--<form id="data-form">
+  		<label class="form__row__label" for="occupancies_lease_information_form_signed_on">Signed On</label><input id="name" type="text"></input>
+  		<input id="generate" class="btn btn-primary js-save-block" type="submit" value="Generate PDF">
+  	</form>-->
+   <!-- <iframe id="pdf" width="600" height="600"></iframe>-->
+  </body>
+
+
+
+</html>
