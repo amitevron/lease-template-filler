@@ -32,8 +32,14 @@
       <div class="form__row">
         <label class="form__row__label" for="lease_information_form_renewal_term_number">Renewal term</label>
         <div class="form__row__body">
-          <div class="form__row__field-wrapper">
+          <div class="form__row__field-wrapper" style="width: 30%">
               <input class="number" type="number" name="lease_information_form[renew_term_number]" id="lease_information_form_renewal_term_number" value="1">          
+          </div>
+          <div class="form__row__field-wrapper" style="width: 30%">
+              <select name="lease_information_form[renew_term_unit]" id="lease_information_form_renewal_term_unit">
+                <option value="years">years</option>
+                <option value="months">months</option>
+              </select>          
           </div>
         </div>
       </div>

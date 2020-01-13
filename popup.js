@@ -113,23 +113,46 @@ async function modifyPdf(data) {
 // });
 // }
 
+function updateNewEndDate(number, timeperiod, currentEndDate)
+{
+	// $("#sent").text("number is " + number + " " + timeperiod)
+	// console.log("going to add " + number + " " + timeperiod + " to " + currentEndDate)
+	var newEndDate = currentEndDate
+	// timeperiod == "months" ? newEndDate.setMonth((parseInt(newEndDate.getMonth())+parseInt(number)+1)) : newEndDate.setYear((parseInt(newEndDate.getFullYear())+parseInt(number)))
+	if(timeperiod == "months") {
+		newEndDate.setMonth((parseInt(newEndDate.getMonth())+parseInt(number)+1))
+		newEndDate.setDate(0)
+	}
+	else {
+		newEndDate.setYear((parseInt(newEndDate.getFullYear())+parseInt(number)))
+		newEndDate.setMonth((parseInt(newEndDate.getMonth())+1))
+		newEndDate.setDate(0)
+	}
+	$("#lease_information_form_new_end_date").val(newEndDate.getFullYear() + '-' + ((newEndDate.getMonth() > 8) ? (newEndDate.getMonth() + 1) : ('0' + (newEndDate.getMonth() + 1))) + '-' + ((newEndDate.getDate() > 9) ? newEndDate.getDate() : ('0' + newEndDate.getDate())))
+}
+
 chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
 	return new Promise((resolve, reject) => {
 		chrome.tabs.sendMessage(tabs[0].id, {greeting: "hello"}, function(response) {
 	 	document.getElementById('sent').innerHTML = response.data.name
-		console.log(response.data.name);
-	// const keys = Object.keys(response.data)
-	// // alert(keys)
-	// for (const key of keys) {
-	// 	console.log("key is " + key + " and value is " + response.data[key])
-	// }
-		$("#lease_information_form_tenant_name").attr("value", response.data.name)
-		
+		// console.log(response.data.name);
+		const currentEndDate = new Date(response.data.endDate.split('/').map(x => parseInt(x)))
+		// console.log(currentEndDate.getFullYear() + '/' + (currentEndDate.getMonth() > 8) ? (currentEndDate.getMonth() + 1) : ('0' + (currentEndDate.getMonth() + 1)))
+		$("#lease_information_form_current_end_date").attr("value", (currentEndDate.getFullYear() + '-' + ((currentEndDate.getMonth() > 8) ? (currentEndDate.getMonth() + 1) : ('0' + (currentEndDate.getMonth() + 1))) + '-' + ((currentEndDate.getDate() > 9) ? currentEndDate.getDate() : ('0' + currentEndDate.getDate()))))
+		updateNewEndDate(1,"years", currentEndDate)
+		$("#lease_information_form_renewal_term_number").change(function() {
+			const currentEndDate = new Date(response.data.endDate.split('/').map(x => parseInt(x)))
+			updateNewEndDate($("#lease_information_form_renewal_term_number").val(),$("#lease_information_form_renewal_term_unit").val(), currentEndDate)
+		});
+		$("#lease_information_form_renewal_term_unit").change(function() {
+			const currentEndDate = new Date(response.data.endDate.split('/').map(x => parseInt(x)))
+			updateNewEndDate($("#lease_information_form_renewal_term_number").val(),$("#lease_information_form_renewal_term_unit").val(), currentEndDate)
+		});
+
+
 		//var [endMonth, endDay, endYear] = response.data.endDate.split('/').map(x => parseInt(x))
-		//const formDate = (endYear+1)+"-"+endMonth+"-"+endDay
-		const formDate = new Date(response.data.endDate.split('/').map(x => parseInt(x)))
-		console.log(formDate.getFullYear() + '/' + (formDate.getMonth() > 8) ? (formDate.getMonth() + 1) : ('0' + (formDate.getMonth() + 1)))
-		$("#lease_information_form_current_end_date").attr("value", (formDate.getFullYear() + '-' + ((formDate.getMonth() > 8) ? (formDate.getMonth() + 1) : ('0' + (formDate.getMonth() + 1))) + '-' + ((formDate.getDate() > 9) ? formDate.getDate() : ('0' + formDate.getDate()))))
+		//const currentEndDate = (endYear+1)+"-"+endMonth+"-"+endDay
+
 		// $("#lease_information_form_new_end_date").attr("value", )
 		// document.getElementById('save_button').onclick=modifyPdf(response.data);
     		$('#save_button').click(function(){
@@ -142,6 +165,7 @@ chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
 	  	});
 	});
  });
+
 
 	// chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
  // 		chrome.tabs.sendMessage(tabs[0].id, {greeting: "hello"}, function(response) {
