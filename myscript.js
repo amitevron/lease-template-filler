@@ -3,7 +3,12 @@ chrome.runtime.onMessage.addListener(
     console.log("got request from the extension");
     $("#content").scrollTop(2200)
     var streetAddress, apt, city, stateZip, state, zip;
-    var tenantName = $('.js-tenant-name')[0].innerHTML.trim();
+    var tenantNames = []
+
+    $('.js-swipe-right').map(function(y, x) {tenantNames.push(x.innerHTML.trim())}); //obtain all tenant names
+    // tenantNames.push($('.js-swipe-right')[0].innerHTML.trim());
+    // tenantNames.push($('.js-swipe-right')[1].innerHTML.trim());
+    // tenantNames.push($('.js-swipe-right')[2].innerHTML.trim());
     [streetAddress, apt, city, stateZip] = $('.js-occupancy-property-and-unit-details')[0].textContent.split('|')[1].trim().split(', ');
     [state, zip] = stateZip.split(' ');
     // if ($('.datapair__key:contains(Lease To)')[0] == undefined)
@@ -19,7 +24,7 @@ chrome.runtime.onMessage.addListener(
     
     // var address = $('.js-occupancy-property-and-unit-details')[0].textContent.split('|')[1].trim() // need to split the address up further
     var data = {
-      name: tenantName,
+      names: tenantNames,
       streetAddress: streetAddress,
       apt: apt,
       city: city,
@@ -29,7 +34,7 @@ chrome.runtime.onMessage.addListener(
       leaseDate: leaseDate,
       rent: currentRent 
     }
-    console.log("tenant name is " + tenantName)
+    console.log("tenant name is " + data.names)
     sendResponse({data: data})
     }, 800);
     return true

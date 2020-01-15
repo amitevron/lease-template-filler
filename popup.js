@@ -62,7 +62,7 @@ async function modifyPdf(data) {
 				  const url = 'market renewal blank.pdf'
 				  const existingPdfBytes = await fetch(url).then(res => res.arrayBuffer())
 				  const pdfDoc = await PDFLib.PDFDocument.load(existingPdfBytes)
-				  const font = await pdfDoc.embedFont(PDFLib.StandardFonts.TimesRoman)
+				  const font = await pdfDoc.embedFont(PDFLib.StandardFonts.Helvetica)
 				  const pages = pdfDoc.getPages()
 				  // const firstPage = pages[0]
 				  var company = management[data.streetAddress]
@@ -70,7 +70,7 @@ async function modifyPdf(data) {
 				  putText(pages[0], company.llc, 												108, 697, font, 10) 	
 				  putText(pages[0], company.manAddress, 										108, 685, font, 10)
 				  putText(pages[0], company.manCity+", "+company.manState+" "+company.manZip, 	108, 673, font, 10)
-				  putText(pages[0], data.name, 													126, 613, font, 12)
+				  putText(pages[0], data.names.join('; '),										126, 613, font, 12)
 				  putText(pages[0], data.streetAddress+ ", apt " + data.apt	, 					126, 599, font, 12) 
 				  putText(pages[0], data.city+", "+data.state+" " + data.zip, 					126, 585, font, 12)
 				  putText(pages[0], data.streetAddress+", "+data.city+", "+data.state+" " + data.zip, 144, 488, font, 12)
@@ -134,7 +134,7 @@ function updateNewEndDate(number, timeperiod, currentEndDate)
 chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
 	return new Promise((resolve, reject) => {
 		chrome.tabs.sendMessage(tabs[0].id, {greeting: "hello"}, function(response) {
-	 	document.getElementById('sent').innerHTML = response.data.name
+	 	document.getElementById('sent').innerHTML = response.data.names.join('; ')
 		// console.log(response.data.name);
 		const currentEndDate = new Date(response.data.endDate.split('/').map(x => parseInt(x)))
 		// console.log(currentEndDate.getFullYear() + '/' + (currentEndDate.getMonth() > 8) ? (currentEndDate.getMonth() + 1) : ('0' + (currentEndDate.getMonth() + 1)))
