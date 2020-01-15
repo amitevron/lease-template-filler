@@ -59,31 +59,31 @@ function putText(page, data, x, y, font, size) {
 
 
 async function modifyPdf(data) {
-				  const url = 'black market renewal.pdf'
+				  const url = 'market renewal blank.pdf'
 				  const existingPdfBytes = await fetch(url).then(res => res.arrayBuffer())
 				  const pdfDoc = await PDFLib.PDFDocument.load(existingPdfBytes)
 				  const font = await pdfDoc.embedFont(PDFLib.StandardFonts.TimesRoman)
 				  const pages = pdfDoc.getPages()
 				  // const firstPage = pages[0]
 				  var company = management[data.streetAddress]
-				  var [endMonth, endDay, endYear] = data.endDate.split('/').map(x => parseInt(x))
-				  putText(pages[0], company.llc, 								108, 697, font, 10) 	
-				  putText(pages[0], company.manAddress, 						108, 685, font, 10)
-				  putText(pages[0], company.manCity+", "+company.manState+" "+company.manZip, 						108, 673, font, 10)
-				  // putText(pages[0], "PO Box 1161", 								108, 686, font, 10) 								// need to implement
-				  putText(pages[0], data.name, 									126, 613, font, 12)
-				  putText(pages[0], data.streetAddress+ ", apt " + data.apt	, 	126, 599, font, 12) 
-				  putText(pages[0], data.city+", "+data.state+" " + data.zip, 	126, 585, font, 12)
+				  var [endYear, endMonth, endDay] = data.newEndDate.split('-').map(x => parseInt(x))
+				  putText(pages[0], company.llc, 												108, 697, font, 10) 	
+				  putText(pages[0], company.manAddress, 										108, 685, font, 10)
+				  putText(pages[0], company.manCity+", "+company.manState+" "+company.manZip, 	108, 673, font, 10)
+				  putText(pages[0], data.name, 													126, 613, font, 12)
+				  putText(pages[0], data.streetAddress+ ", apt " + data.apt	, 					126, 599, font, 12) 
+				  putText(pages[0], data.city+", "+data.state+" " + data.zip, 					126, 585, font, 12)
 				  putText(pages[0], data.streetAddress+", "+data.city+", "+data.state+" " + data.zip, 144, 488, font, 12)
-				  putText(pages[0], data.apt, 									212, 475, font, 12)
-				  putText(pages[0], data.endDate, 								257, 461, font, 12) 
-				  putText(pages[0], data.rent, 									222, 447, font, 12)      
-				  putText(pages[0], data.name+",", 								 98, 419, font, 12)
-				  putText(pages[0], data.newRent,								434, 295, font, 12)		//need to impletement new rent
-				  // putText(pages[0], data.leaseDate,								328, 364, font, 12)
-				  putText(pages[0], data.leaseDate,								328, 364, font, 12)
-				  // putText(pages[0], endMonth+"/"+endDay+"/"+(endYear+1),		316, 146, font, 12)
-				  putText(pages[0], data.newEndDate,							316, 146, font, 12)	
+				  putText(pages[0], data.apt, 													212, 475, font, 12)
+				  putText(pages[0], data.endDate, 												257, 461, font, 12) 
+				  putText(pages[0], data.rent, 													222, 447, font, 12)      
+				  putText(pages[0], data.name+",", 								 				98, 419, font, 12)
+				  putText(pages[0], data.newRent,												434, 295, font, 12)	
+				  putText(pages[0], data.newLeaseTermNumber,									268, 295, font, 12)		
+				  putText(pages[0], data.newLeaseTermUnit.slice(0,-1).toUpperCase(), 			276, 295, font, 12)
+				  putText(pages[0], data.leaseDate,												337, 364, font, 12)
+				  putText(pages[0], endMonth+"/"+endDay+"/"+endYear,		316, 145, font, 12)
+				  // putText(pages[0], data.newEndDate,											316, 146, font, 12)	
 
 				  const pdfBytes = await pdfDoc.save()
 				  const pdfDataUri = await pdfDoc.saveAsBase64({ dataUri: true });
@@ -148,16 +148,11 @@ chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
 			const currentEndDate = new Date(response.data.endDate.split('/').map(x => parseInt(x)))
 			updateNewEndDate($("#lease_information_form_renewal_term_number").val(),$("#lease_information_form_renewal_term_unit").val(), currentEndDate)
 		});
-
-
-		//var [endMonth, endDay, endYear] = response.data.endDate.split('/').map(x => parseInt(x))
-		//const currentEndDate = (endYear+1)+"-"+endMonth+"-"+endDay
-
-		// $("#lease_information_form_new_end_date").attr("value", )
-		// document.getElementById('save_button').onclick=modifyPdf(response.data);
-    		$('#save_button').click(function(){
+    	$('#save_button').click(function(){
     			response.data.newRent = $('#lease_information_form_new_rent').val().toString()
     			response.data.newEndDate = $('#lease_information_form_new_end_date').val().toString()
+    			response.data.newLeaseTermNumber = $('#lease_information_form_renewal_term_number').val().toString()
+    			response.data.newLeaseTermUnit = $('#lease_information_form_renewal_term_unit').val().toString()
     			modifyPdf(response.data);
     			return false
     		})
