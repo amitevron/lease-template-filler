@@ -10,8 +10,8 @@
 // });
 var management = {
 	"122 E 102st":{llc:"122 E. Realty", manAddress: "PO Box 573", manCity: "New York", manState: "NY", manZip: "10030"},
-	"131 E 110st":{llc:"Sun Management LLC", manAddress: "PO Box 1161", manCity: "New York", manState: "NY", manZip: "10150"},
-	"133 E 110st":{llc:"Sun Management LLC", manAddress: "PO Box 1161", manCity: "New York", manState: "NY", manZip: "10150"},
+	"131 E 110st":{llc:"Sun Management LLC", manAddress: "PO Box 573", manCity: "New York", manState: "NY", manZip: "10150"},
+	"133 E 110st":{llc:"Sun Management LLC", manAddress: "PO Box 573", manCity: "New York", manState: "NY", manZip: "10150"},
 	"102-17 Northern Blvd.":{llc:"DNE LLC", manAddress: "PO Box 573", manCity: "New York", manState: "NY", manZip: "10030"},
 	"102-19 Northern Blvd.":{llc:"DNE LLC", manAddress: "PO Box 573", manCity: "New York", manState: "NY", manZip: "10030"},
 	"33-11 108st":{llc:"108 Corona LLC", manAddress: "PO Box 573", manCity: "New York", manState: "NY", manZip: "10030"},
@@ -21,16 +21,16 @@ var management = {
 	"200 W 134st":{llc:"134 Realty (2010) LLC", manAddress: "PO Box 573", manCity: "New York", manState: "NY", manZip: "10030"},
 	"268 W 136st":{llc:"136 Realty (2012) LLC", manAddress: "PO Box 573", manCity: "New York", manState: "NY", manZip: "10030"},
 	"401 W 148st":{llc:"148 Realty LLC", manAddress: "PO Box 573", manCity: "New York", manState: "NY", manZip: "10030"},
-	"153 E 106st":{llc:"Sun Capital Corp", manAddress: "PO Box 1161", manCity: "New York", manState: "NY", manZip: "10150"},
+	"153 E 106st":{llc:"Sun Capital Corp", manAddress: "PO Box 573", manCity: "New York", manState: "NY", manZip: "10150"},
 	"427 W 154st":{llc:"154st Holding Company LLC", manAddress: "PO Box 573", manCity: "New York", manState: "NY", manZip: "10030"},
 	"160 E 107st":{llc:"107 (160) Realty LLC", manAddress: "PO Box 573", manCity: "New York", manState: "NY", manZip: "10030"},
 	"167 E 107st":{llc:"107 (160) Realty LLC", manAddress: "PO Box 573", manCity: "New York", manState: "NY", manZip: "10030"},
-	"1719 Lexington Ave.":{llc:"Sun Capital Corp", manAddress: "PO Box 1161", manCity: "New York", manState: "NY", manZip: "10150"},
-	"1721 Lexington Ave.":{llc:"Sun Capital Corp", manAddress: "PO Box 1161", manCity: "New York", manState: "NY", manZip: "10150"},
+	"1719 Lexington Ave.":{llc:"Sun Capital Corp", manAddress: "PO Box 573", manCity: "New York", manState: "NY", manZip: "10150"},
+	"1721 Lexington Ave.":{llc:"Sun Capital Corp", manAddress: "PO Box 573", manCity: "New York", manState: "NY", manZip: "10150"},
 	"513 W 173st":{llc:"173 Realty LLC", manAddress: "PO Box 573", manCity: "New York", manState: "NY", manZip: "10030"},
 	"204 W 132st":{llc:"204-132 2013 LLC", manAddress: "PO Box 573", manCity: "New York", manState: "NY", manZip: "10030"},
 	"206 W 132st":{llc:"206-132 2013 LLC", manAddress: "PO Box 573", manCity: "New York", manState: "NY", manZip: "10030"},
-	"245 E 110st":{llc:"NYC Building Mgt LLC", manAddress: "PO Box 1161", manCity: "New York", manState: "NY", manZip: "10150"},
+	"245 E 110st":{llc:"NYC Building Mgt LLC", manAddress: "PO Box 573", manCity: "New York", manState: "NY", manZip: "10150"},
 	"2528 Adam Clayton Powell Jr Blvd.":{llc:"2528 Realty LLC", manAddress: "PO Box 573", manCity: "New York", manState: "NY", manZip: "10030"},
 	"240 E 26st":{llc:"240 East 26st Holding LLC", manAddress: "PO Box 573", manCity: "New York", manState: "NY", manZip: "10030"},
 	"400 Central Park West":{llc:"Uzi Evron", manAddress: "PO Box 573", manCity: "New York", manState: "NY", manZip: "10030"},
@@ -77,7 +77,7 @@ async function modifyPdf(data) {
 				  putText(pages[0], data.apt, 													212, 475, font, 12)
 				  putText(pages[0], data.endDate, 												257, 461, font, 12) 
 				  putText(pages[0], data.rent, 													222, 447, font, 12)      
-				  putText(pages[0], data.name+",", 								 				98, 419, font, 12)
+				  putText(pages[0], data.names.join(', ')+",", 								 				98, 419, font, 12)
 				  putText(pages[0], data.newRent,												434, 295, font, 12)	
 				  putText(pages[0], data.newLeaseTermNumber,									268, 295, font, 12)		
 				  putText(pages[0], data.newLeaseTermUnit.slice(0,-1).toUpperCase(), 			276, 295, font, 12)
@@ -85,11 +85,20 @@ async function modifyPdf(data) {
 				  putText(pages[0], endMonth+"/"+endDay+"/"+endYear,		316, 145, font, 12)
 				  // putText(pages[0], data.newEndDate,											316, 146, font, 12)	
 
-				  const pdfBytes = await pdfDoc.save()
 				  const pdfDataUri = await pdfDoc.saveAsBase64({ dataUri: true });
 				  // document.getElementById('pdf').src = pdfDataUri; // render the pdf
-				  chrome.tabs.create({ url: pdfDataUri }); // open the pdf in a new tab
-				  //download the pdf:
+				  // chrome.tabs.create({ url: pdfDataUri }); // open the pdf in a new tab
+
+				  //download the pdf I:
+				  	var leaseYear = new Date().getFullYear()
+				  	var filename = leaseYear+"_"+data.propName+"_"+data.apt+"_"+data.names.join('_')+".pdf"
+					var link = document.createElement('a');
+				    link.download = filename
+				    link.href = pdfDataUri;
+				    link.click();
+
+				  //download the pdf II:
+				 //  const pdfBytes = await pdfDoc.save()
 				 //  chrome.downloads.download({
 			  // 			url: pdfBytes,
 			  // 			filename: "testMod.pdf" // Optional
@@ -115,19 +124,19 @@ async function modifyPdf(data) {
 
 function updateNewEndDate(number, timeperiod, currentEndDate)
 {
-	// $("#sent").text("number is " + number + " " + timeperiod)
-	// console.log("going to add " + number + " " + timeperiod + " to " + currentEndDate)
-	var newEndDate = currentEndDate
+
+	var newEndDate = new Date();
+	console.log("current end date is " + currentEndDate)
 	// timeperiod == "months" ? newEndDate.setMonth((parseInt(newEndDate.getMonth())+parseInt(number)+1)) : newEndDate.setYear((parseInt(newEndDate.getFullYear())+parseInt(number)))
 	if(timeperiod == "months") {
-		newEndDate.setMonth((parseInt(newEndDate.getMonth())+parseInt(number)+1))
-		newEndDate.setDate(0)
+		newEndDate.setYear((parseInt(currentEndDate.getFullYear())))
+		newEndDate.setMonth((parseInt(currentEndDate.getMonth())+parseInt(number)+1))
 	}
 	else {
-		newEndDate.setYear((parseInt(newEndDate.getFullYear())+parseInt(number)))
-		newEndDate.setMonth((parseInt(newEndDate.getMonth())+1))
-		newEndDate.setDate(0)
+		newEndDate.setYear((parseInt(currentEndDate.getFullYear())+parseInt(number)))
+		newEndDate.setMonth((parseInt(currentEndDate.getMonth())+1))
 	}
+		newEndDate.setDate(0)
 	$("#lease_information_form_new_end_date").val(newEndDate.getFullYear() + '-' + ((newEndDate.getMonth() > 8) ? (newEndDate.getMonth() + 1) : ('0' + (newEndDate.getMonth() + 1))) + '-' + ((newEndDate.getDate() > 9) ? newEndDate.getDate() : ('0' + newEndDate.getDate())))
 }
 
