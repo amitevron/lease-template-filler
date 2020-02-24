@@ -59,7 +59,7 @@ function putText(page, data, x, y, font, size) {
 
 
 async function modifyPdf(data) {
-				  const url = 'market renewal blank.pdf'
+				  const url = 'market renewal blank2.pdf'
 				  const existingPdfBytes = await fetch(url).then(res => res.arrayBuffer())
 				  const pdfDoc = await PDFLib.PDFDocument.load(existingPdfBytes)
 				  const font = await pdfDoc.embedFont(PDFLib.StandardFonts.Helvetica)
@@ -67,6 +67,7 @@ async function modifyPdf(data) {
 				  // const firstPage = pages[0]
 				  var company = management[data.streetAddress]
 				  var [endYear, endMonth, endDay] = data.newEndDate.split('-').map(x => parseInt(x))
+				  var leaseTerms = data.newLeaseTermNumber+" "+data.newLeaseTermUnit+" LEASE RENEWAL: $"+data.newRent
 				  putText(pages[0], company.llc, 												108, 697, font, 10) 	
 				  putText(pages[0], company.manAddress, 										108, 685, font, 10)
 				  putText(pages[0], company.manCity+", "+company.manState+" "+company.manZip, 	108, 673, font, 10)
@@ -78,9 +79,10 @@ async function modifyPdf(data) {
 				  putText(pages[0], data.endDate, 												257, 461, font, 12) 
 				  putText(pages[0], data.rent, 													222, 447, font, 12)      
 				  putText(pages[0], data.names.join(', ')+",", 								 				98, 419, font, 12)
-				  putText(pages[0], data.newRent,												434, 295, font, 12)	
-				  putText(pages[0], data.newLeaseTermNumber,									268, 295, font, 12)		
-				  putText(pages[0], data.newLeaseTermUnit.slice(0,-1).toUpperCase(), 			276, 295, font, 12)
+				  putText(pages[0], leaseTerms,													268, 295, font, 12)		
+				  // putText(pages[0], data.newRent,												434, 295, font, 12)	
+				  // putText(pages[0], data.newLeaseTermNumber,									268, 295, font, 12)		
+				  // putText(pages[0], data.newLeaseTermUnit.slice(0,-1).toUpperCase(), 			276, 295, font, 12)
 				  putText(pages[0], data.leaseDate,												337, 364, font, 12)
 				  putText(pages[0], endMonth+"/"+endDay+"/"+endYear,		316, 145, font, 12)
 				  // putText(pages[0], data.newEndDate,											316, 146, font, 12)	
@@ -91,7 +93,7 @@ async function modifyPdf(data) {
 
 				  //download the pdf I:
 				  	var leaseYear = new Date().getFullYear()
-				  	var filename = leaseYear+"_"+data.propName+"_"+data.apt+"_"+data.names.join('_')+".pdf"
+				  	var filename = leaseYear+"_"+data.streetAddress+"_"+data.apt+"_"+data.names.join('_')+".pdf"
 					var link = document.createElement('a');
 				    link.download = filename
 				    link.href = pdfDataUri;
@@ -143,7 +145,7 @@ function updateNewEndDate(number, timeperiod, currentEndDate)
 chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
 	return new Promise((resolve, reject) => {
 		chrome.tabs.sendMessage(tabs[0].id, {greeting: "hello"}, function(response) {
-	 	document.getElementById('sent').innerHTML = response.data.names.join('; ')
+	 	document.getElementById('tenant_names').innerHTML = response.data.names.join('; ')
 		// console.log(response.data.name);
 		const currentEndDate = new Date(response.data.endDate.split('/').map(x => parseInt(x)))
 		// console.log(currentEndDate.getFullYear() + '/' + (currentEndDate.getMonth() > 8) ? (currentEndDate.getMonth() + 1) : ('0' + (currentEndDate.getMonth() + 1)))
@@ -161,7 +163,7 @@ chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
     			response.data.newRent = $('#lease_information_form_new_rent').val().toString()
     			response.data.newEndDate = $('#lease_information_form_new_end_date').val().toString()
     			response.data.newLeaseTermNumber = $('#lease_information_form_renewal_term_number').val().toString()
-    			response.data.newLeaseTermUnit = $('#lease_information_form_renewal_term_unit').val().toString()
+    			response.data.newLeaseTermUnit = $('#lease_information_form_renewal_term_unit').val().toString().slice(0,-1)
     			modifyPdf(response.data);
     			return false
     		})
